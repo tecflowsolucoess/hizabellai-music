@@ -1586,12 +1586,15 @@
     function checkPostPaymentFlow() {
       const params = new URLSearchParams(window.location.search);
       const urlOrderId = params.get('orderId');
-      const isPostPayment = params.get('status') === 'pago' || 
+      const isDirectPaid = params.get('status') === 'pago' || 
                            params.get('status') === 'approved' || 
+                           params.get('status') === 'success' ||
                            params.has('pago') || 
-                           params.get('status') === 'aguardo' ||
-                           !!urlOrderId ||
                            window.location.hash === '#sucesso';
+
+      const isPostPayment = isDirectPaid || 
+                           params.get('status') === 'aguardo' ||
+                           !!urlOrderId;
 
       if (!isPostPayment) return;
 
@@ -1611,8 +1614,14 @@
         }
       };
 
-      renderPendingState(pedido);
-      startStatusPolling(orderId, pedido);
+      if (isDirectPaid) {
+        pedido.status = 'PAID';
+        localStorage.setItem('pedido_hizabellai', JSON.stringify(pedido));
+        renderPaidSuccess(orderId, pedido);
+      } else {
+        renderPendingState(pedido);
+        startStatusPolling(orderId, pedido);
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
