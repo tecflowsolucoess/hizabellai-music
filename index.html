@@ -650,6 +650,31 @@
           </div>
         </div>
 
+        <!-- Pacote 5 (Comerciantes / Negócios) -->
+        <div class="package-option glass-box rounded-2xl p-4 border border-white/10 transition-all cursor-pointer relative"
+             data-id="5" data-name="Pack Comerciante (3 Músicas / Jingles)" data-price="79.90">
+          <div class="absolute -top-2.5 right-4 bg-amber-500 text-black text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow">
+            📢 PARA COMERCIANTES
+          </div>
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">🏪</span>
+                <h3 class="text-xs font-extrabold text-white">Pack Comerciante (3 Músicas)</h3>
+              </div>
+              <p class="text-[11px] text-zinc-300 mt-1">3 canções/jingles exclusivos para propaganda, stories e divulgação do seu negócio.</p>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="text-[10px] text-zinc-500 line-through block">De R$ 189,90</span>
+              <span class="text-base font-black text-amber-300">R$ 79,90</span>
+            </div>
+          </div>
+          <div class="mt-2 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
+            <span>Formato: 3 Músicas (Áudio MP3 HD)</span>
+            <span class="radio-check text-xs text-zinc-500">○ Selecionar</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -685,10 +710,10 @@
                  class="w-full h-11 px-3.5 rounded-xl bg-black/30 border border-white/15 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors">
         </div>
 
-        <!-- Nome do Homenageado -->
+        <!-- Nome do Homenageado / Marca -->
         <div>
-          <label class="block text-xs font-semibold text-zinc-300 mb-1">Nome do Homenageado(a) *</label>
-          <input type="text" id="inputRecipientName" required placeholder="Ex: Felipe (namorado)"
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">Nome do Homenageado(a) ou Negócio/Loja *</label>
+          <input type="text" id="inputRecipientName" required placeholder="Ex: Felipe ou Nome da Sua Loja/Marca"
                  class="w-full h-11 px-3.5 rounded-xl bg-black/30 border border-white/15 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors">
         </div>
 
@@ -718,6 +743,9 @@
             <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="MPB Moderna">
               ☕ MPB
             </button>
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Jingle Comercial / Propaganda">
+              📢 Jingle Comercial
+            </button>
           </div>
         </div>
 
@@ -731,7 +759,7 @@
             <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Romântico Leve">
               💕 Romântico
             </button>
-            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Alegre / Festa">
+            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Alegre / Festa / Comercial">
               🥳 Alegre / Festa
             </button>
           </div>
@@ -740,11 +768,11 @@
         <!-- Detalhes da História -->
         <div>
           <label class="block text-xs font-semibold text-zinc-300 mb-1 flex items-center justify-between">
-            <span>Conte os detalhes da história *</span>
+            <span>Conte os detalhes da história ou do negócio *</span>
             <span id="storyCharCount" class="text-[10px] text-zinc-400">0 caracteres</span>
           </label>
           <textarea id="inputStory" required rows="4" 
-                    placeholder="Conte como se conheceram, apelidos fofos, piadas internas, momentos que superaram juntos..." 
+                    placeholder="Conte como se conheceram, apelidos fofos ou, se for para comércio: nome do seu negócio, nicho, produtos e chamada para ação desejada..." 
                     class="w-full p-3 rounded-xl bg-black/30 border border-white/15 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-rose-500 transition-colors leading-relaxed"></textarea>
         </div>
 
@@ -915,7 +943,8 @@
       p1: "LINK_MERCADO_PAGO_OU_ASAAS_29_90",
       p2: "LINK_MERCADO_PAGO_OU_ASAAS_47_00",
       p3: "LINK_MERCADO_PAGO_OU_ASAAS_57_00",
-      p4: "LINK_MERCADO_PAGO_OU_ASAAS_67_00"
+      p4: "LINK_MERCADO_PAGO_OU_ASAAS_67_00",
+      p5: "LINK_MERCADO_PAGO_OU_ASAAS_79_90"
     };
 
     const WHATSAPP_NUMERO = "5581984851908"; // Número Oficial de Atendimento HizabellAi Music
