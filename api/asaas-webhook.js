@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   // Validação de token se fornecido
-  const expectedToken = process.env.ASAAS_WEBHOOK_TOKEN || 'hizabellai_secure_token_2026';
+  const expectedToken = process.env.ASAAS_WEBHOOK_TOKEN || 'hizabellai_music_webhook_token_2026';
   const receivedToken = req.headers['asaas-access-token'] || req.headers['asaas-token'];
   if (expectedToken && receivedToken && receivedToken !== expectedToken) {
     return res.status(401).json({ error: 'Token invalido', received: false });
