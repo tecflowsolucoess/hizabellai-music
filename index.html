@@ -728,23 +728,29 @@
         <div>
           <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Gênero Musical Desejado *</label>
           <div class="flex flex-wrap gap-2" id="genreTagList">
-            <button type="button" class="genre-pill active-pill px-3 py-1.5 rounded-full text-xs font-medium bg-rose-600 border border-rose-400 text-white" data-genre="Poesia Acústica (Voz e Violão)">
-              🎸 Acústico
+            <button type="button" class="genre-pill active-pill px-3 py-1.5 rounded-full text-xs font-medium bg-rose-600 border border-rose-400 text-white" data-genre="Acústico / MPB">
+              🎸 Acústico / MPB
             </button>
-            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Trap Love Melódico">
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Trap Love">
               🎹 Trap Love
             </button>
-            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Sertanejo Romântico">
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Sertanejo">
               🤠 Sertanejo
             </button>
-            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Pagode / Samba Love">
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Pagode Love">
               🥁 Pagode Love
             </button>
-            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="MPB Moderna">
-              ☕ MPB
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Forró / Piseiro">
+              🪗 Forró / Piseiro
             </button>
-            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Jingle Comercial / Propaganda">
-              📢 Jingle Comercial
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Pop">
+              🎧 Pop
+            </button>
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Funk / Brega Love">
+              ⚡ Funk / Brega Love
+            </button>
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Deixar a IA Escolher">
+              ✨ Deixar a IA Escolher
             </button>
           </div>
         </div>
@@ -752,15 +758,21 @@
         <!-- Clima da Canção -->
         <div>
           <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Clima / Emoção da Música *</label>
-          <div class="grid grid-cols-3 gap-2" id="moodOptionList">
-            <button type="button" class="mood-pill active-pill p-2 rounded-xl text-center text-xs font-medium bg-rose-600 border border-rose-400 text-white" data-mood="Emocionante / Para Chorar de Emoção">
-              🥺 Emocionante
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="moodOptionList">
+            <button type="button" class="mood-pill active-pill p-2 rounded-xl text-center text-xs font-medium bg-rose-600 border border-rose-400 text-white" data-mood="Emocionante (Chorar)">
+              🥺 Emocionante (Chorar)
             </button>
-            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Romântico Leve">
-              💕 Romântico
+            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Romântico">
+              ❤️ Romântico
             </button>
-            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Alegre / Festa / Comercial">
+            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Alegre / Festa">
               🥳 Alegre / Festa
+            </button>
+            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Divertido (Piadas Internas)">
+              😂 Divertido (Piadas Internas)
+            </button>
+            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300 col-span-2 sm:col-span-1" data-mood="Gratidão / Superação">
+              🙏 Gratidão / Superação
             </button>
           </div>
         </div>
@@ -768,12 +780,15 @@
         <!-- Detalhes da História -->
         <div>
           <label class="block text-xs font-semibold text-zinc-300 mb-1 flex items-center justify-between">
-            <span>Conte os detalhes da história ou do negócio *</span>
-            <span id="storyCharCount" class="text-[10px] text-zinc-400">0 caracteres</span>
+            <span>Resumo da História (Você também pode mandar em áudio pelo WhatsApp) *</span>
+            <span id="storyCharCount" class="text-[10px] text-zinc-400 shrink-0 ml-2">0 caracteres</span>
           </label>
           <textarea id="inputStory" required rows="4" 
-                    placeholder="Conte como se conheceram, apelidos fofos ou, se for para comércio: nome do seu negócio, nicho, produtos e chamada para ação desejada..." 
+                    placeholder="Escreva aqui os pontos principais (nomes, momentos marcantes, piadas internas). Não precisa escrever um textão: você poderá gravar um áudio contando tudo com calma no WhatsApp logo após a confirmação!" 
                     class="w-full p-3 rounded-xl bg-black/30 border border-white/15 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-rose-500 transition-colors leading-relaxed"></textarea>
+          <p class="text-[11px] text-rose-300/90 mt-1.5 flex items-center gap-1.5">
+            <span>🎙️ Preferir falar? Você poderá gravar o áudio da história e mandar as fotos pelo WhatsApp no passo seguinte.</span>
+          </p>
         </div>
 
         <!-- Botão de Finalização -->
@@ -953,8 +968,8 @@
     /* Estado da Aplicação */
     const app = {
       selectedPack: { id: "p2", name: "Canção + Clipe com Fotos (30s)", price: "47.00" },
-      selectedGenre: "Poesia Acústica (Voz e Violão)",
-      selectedMood: "Emocionante / Para Chorar de Emoção",
+      selectedGenre: "Acústico / MPB",
+      selectedMood: "Emocionante (Chorar)",
       isPlaying: false,
       trackIndex: 0,
       timer: null,
