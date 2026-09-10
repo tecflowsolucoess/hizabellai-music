@@ -387,8 +387,8 @@
 
       <!-- Título da Faixa Ativa e Artista -->
       <div class="mt-2.5">
-        <h3 id="currentSongTitle" class="text-sm font-bold text-white tracking-wide">"Promessa de Amor"</h3>
-        <p id="currentSongSubtitle" class="text-xs text-zinc-300">Voz Suave, Violão Acústico &amp; Emoção</p>
+        <h3 id="currentSongTitle" class="text-sm font-bold text-white tracking-wide">"Dois Contra o Mundo"</h3>
+        <p id="currentSongSubtitle" class="text-xs text-zinc-300">Poesia Acústica Romântica &amp; Emoção</p>
       </div>
 
       <!-- Barra de Progresso Fina -->
@@ -435,10 +435,10 @@
             </div>
             <div class="text-left">
               <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
-                <span>Promessa de Amor</span>
+                <span>Dois Contra o Mundo</span>
                 <span class="playing-indicator text-[10px] text-rose-400">● Tocando</span>
               </h4>
-              <p class="text-[10px] text-zinc-300">Acústico Romântico</p>
+              <p class="text-[10px] text-zinc-300">Poesia Acústica Romântica</p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -450,12 +450,12 @@
         <!-- Faixa 2 -->
         <div data-track="1" class="playlist-item flex items-center justify-between p-2.5 rounded-2xl bg-black/20 border border-white/5 hover:border-white/15 transition-all cursor-pointer">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-orange-400 flex items-center justify-center text-lg shadow-md shrink-0">
-              🥁
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-lg shadow-md shrink-0">
+              🏪
             </div>
             <div class="text-left">
-              <h4 class="text-xs font-bold text-white">Nosso Samba Retrô</h4>
-              <p class="text-[10px] text-zinc-400">Pagode &amp; Cavaquinho</p>
+              <h4 class="text-xs font-bold text-white">Chama no Depósito</h4>
+              <p class="text-[10px] text-zinc-400">Piseiro &amp; Jingle Comercial</p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -471,8 +471,8 @@
               🎹
             </div>
             <div class="text-left">
-              <h4 class="text-xs font-bold text-white">Noite Inesquecível</h4>
-              <p class="text-[10px] text-zinc-400">Trap Love &amp; 808</p>
+              <h4 class="text-xs font-bold text-white">Papo de Olhar</h4>
+              <p class="text-[10px] text-zinc-400">Trap Love &amp; Conexão Sem Fio</p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -484,12 +484,12 @@
         <!-- Faixa 4 -->
         <div data-track="3" class="playlist-item flex items-center justify-between p-2.5 rounded-2xl bg-black/20 border border-white/5 hover:border-white/15 transition-all cursor-pointer">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-lg shadow-md shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center text-lg shadow-md shrink-0">
               🤠
             </div>
             <div class="text-left">
-              <h4 class="text-xs font-bold text-white">Amor de Novela</h4>
-              <p class="text-[10px] text-zinc-400">Sertanejo Romântico</p>
+              <h4 class="text-xs font-bold text-white">Minha Luz no Fim do Túnel</h4>
+              <p class="text-[10px] text-zinc-400">Sertanejo Marcante &amp; Superação</p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -977,45 +977,48 @@
       duration: 30
     };
 
-    /* Amostras da Playlist de Demonstração */
+    /* Amostras da Playlist de Demonstração (Áudios Reais de Estúdio de 30 Segundos) */
     const tracks = [
-      { title: "Promessa de Amor", subtitle: "Voz Suave, Violão Acústico & Emoção", notes: [261.63, 329.63, 392.00, 523.25] },
-      { title: "Nosso Samba Retrô", subtitle: "Pagode & Cavaquinho Romântico", notes: [293.66, 369.99, 440.00, 587.33] },
-      { title: "Noite Inesquecível", subtitle: "Trap Love & 808 Melódico", notes: [164.81, 220.00, 261.63, 329.63] },
-      { title: "Amor de Novela", subtitle: "Sertanejo Romântico Marcante", notes: [329.63, 392.00, 493.88, 587.33] }
+      { 
+        title: "Dois Contra o Mundo", 
+        subtitle: "Poesia Acústica Romântica & Emoção", 
+        src: "assets/audio/dois-contra-o-mundo.mp3" 
+      },
+      { 
+        title: "Chama no Depósito", 
+        subtitle: "Piseiro Animado & Jingle Comercial", 
+        src: "assets/audio/chama-no-deposito.mp3" 
+      },
+      { 
+        title: "Papo de Olhar", 
+        subtitle: "Trap Love & Conexão Sem Fio", 
+        src: "assets/audio/papo-de-olhar.mp3" 
+      },
+      { 
+        title: "Minha Luz no Fim do Túnel", 
+        subtitle: "Sertanejo Marcante & Superação", 
+        src: "assets/audio/minha-luz-no-fim-do-tunel.mp3" 
+      }
     ];
 
     /* ══════════════════════════════════════════════════════════════════
-       2. ÁUDIO SÍNTESE NATIVO (Web Audio API)
+       2. REPRODUTOR DE ÁUDIO REAL (HTML5 Audio)
        ══════════════════════════════════════════════════════════════════ */
-    let audioContext = null;
-    let synthLoop = null;
+    const audioPlayer = new Audio();
+    audioPlayer.preload = "auto";
 
-    function initAudio() {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioPlayer.addEventListener('timeupdate', () => {
+      if (audioPlayer.duration) {
+        const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        trackProgress.style.width = `${Math.min(pct, 100)}%`;
+        const cur = Math.floor(audioPlayer.currentTime);
+        labelCurrentTime.textContent = `0:${cur < 10 ? '0' : ''}${cur}`;
       }
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-    }
+    });
 
-    function triggerNote(freq) {
-      if (!audioContext) return;
-      try {
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
-        gain.gain.setValueAtTime(0.001, audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.15, audioContext.currentTime + 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.9);
-        osc.connect(gain);
-        gain.connect(audioContext.destination);
-        osc.start();
-        osc.stop(audioContext.currentTime + 0.9);
-      } catch (e) {}
-    }
+    audioPlayer.addEventListener('ended', () => {
+      nextSong();
+    });
 
     /* ══════════════════════════════════════════════════════════════════
        3. PLAYER E VINIL GIRATÓRIO
@@ -1033,27 +1036,25 @@
       const t = tracks[app.trackIndex];
       currentSongTitle.textContent = `"${t.title}"`;
       currentSongSubtitle.textContent = t.subtitle;
-      app.currentTime = 0;
-      labelCurrentTime.textContent = "0:00";
-      trackProgress.style.width = "0%";
 
       document.querySelectorAll('.playlist-item').forEach((item, idx) => {
+        const p = item.querySelector('.play-indicator-icon');
+        const indicator = item.querySelector('.playing-indicator');
         if (idx === app.trackIndex) {
           item.classList.add('active-item', 'bg-white/10', 'border-white/20');
           item.classList.remove('bg-black/20', 'border-white/5');
-          const p = item.querySelector('.play-indicator-icon');
-          if (p) p.textContent = app.isPlaying ? "||" : "▶";
+          if (p) p.textContent = app.isPlaying ? "❚❚" : "▶";
+          if (indicator) indicator.textContent = app.isPlaying ? "● Tocando" : "";
         } else {
           item.classList.remove('active-item', 'bg-white/10', 'border-white/20');
           item.classList.add('bg-black/20', 'border-white/5');
-          const p = item.querySelector('.play-indicator-icon');
           if (p) p.textContent = "▶";
+          if (indicator) indicator.textContent = "";
         }
       });
     }
 
     function togglePlay() {
-      initAudio();
       if (app.isPlaying) {
         pauseSong();
       } else {
@@ -1069,24 +1070,13 @@
       masterVinylDisk.classList.add('spinning');
       masterVinylDisk.classList.remove('paused');
 
-      clearInterval(synthLoop);
-      let step = 0;
       const t = tracks[app.trackIndex];
-      synthLoop = setInterval(() => {
-        if (!app.isPlaying) return;
-        triggerNote(t.notes[step % t.notes.length]);
-        step++;
-      }, 750);
+      if (!audioPlayer.src.endsWith(t.src)) {
+        audioPlayer.src = t.src;
+        audioPlayer.load();
+      }
 
-      clearInterval(app.timer);
-      app.timer = setInterval(() => {
-        app.currentTime++;
-        const pct = (app.currentTime / app.duration) * 100;
-        trackProgress.style.width = `${Math.min(pct, 100)}%`;
-        labelCurrentTime.textContent = `0:${app.currentTime < 10 ? '0' : ''}${app.currentTime}`;
-        if (app.currentTime >= app.duration) nextSong();
-      }, 1000);
-
+      audioPlayer.play().catch(() => {});
       updateTrackInfo();
     }
 
@@ -1097,18 +1087,21 @@
 
       masterVinylDisk.classList.add('paused');
 
-      clearInterval(synthLoop);
-      clearInterval(app.timer);
+      audioPlayer.pause();
       updateTrackInfo();
     }
 
     function nextSong() {
+      audioPlayer.pause();
+      audioPlayer.currentTime = 0;
       app.trackIndex = (app.trackIndex + 1) % tracks.length;
       updateTrackInfo();
       if (app.isPlaying) playSong();
     }
 
     function prevSong() {
+      audioPlayer.pause();
+      audioPlayer.currentTime = 0;
       app.trackIndex = (app.trackIndex - 1 + tracks.length) % tracks.length;
       updateTrackInfo();
       if (app.isPlaying) playSong();

@@ -10,3 +10,6 @@ desktop.ini
 
 # Logs
 *.log
+
+# Arquivos brutos de áudio (mantendo apenas assets/audio/ com 30s otimizados)
+AMOSTRAS MUSICAIS/
