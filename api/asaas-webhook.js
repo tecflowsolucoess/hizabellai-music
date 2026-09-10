@@ -1,8 +1,9 @@
 // Vercel Serverless Function - api/asaas-webhook.js
-// Segurança: token obrigatório + idempotência + sem dados sensíveis expostos
+// Segurança Sênior: Validação Estrita de Token (Sem Fallback) + Timing Attack Safe + Idempotência + Eliminação Total de Heurística de Valor
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import crypto from 'crypto';
 
 // Registro de eventos já processados (idempotência em memória)
 const processedEvents = new Set();
@@ -57,21 +58,31 @@ export default async function handler(req, res) {
   }
 
   // ══════════════════════════════════════════════════════════
-  // VALIDAÇÃO OBRIGATÓRIA DO TOKEN (Autenticação do Webhook)
+  // 1. VALIDAÇÃO OBRIGATÓRIA DO TOKEN (Sem fallback hardcoded)
   // ══════════════════════════════════════════════════════════
-  const expectedToken = process.env.ASAAS_WEBHOOK_TOKEN || 'hizabellai_music_webhook_token_2036';
-  const receivedToken = req.headers['asaas-access-token'] || req.headers['asaas-token'];
+  const expectedToken = process.env.ASAAS_WEBHOOK_TOKEN;
+  if (!expectedToken) {
+    console.error('[FATAL SECURITY] ASAAS_WEBHOOK_TOKEN não está definido no ambiente!');
+    return res.status(500).json({ error: 'Configuração de segurança pendente no servidor' });
+  }
 
+  const receivedToken = req.headers['asaas-access-token'] || req.headers['asaas-token'];
   if (!receivedToken) {
-    console.warn('[WEBHOOK] Requisição rejeitada: token ausente');
+    console.warn('[WEBHOOK] Requisição rejeitada: cabeçalho de token ausente');
     return res.status(401).json({ error: 'Token de autenticação ausente' });
   }
 
-  if (receivedToken !== expectedToken) {
+  // Comparação criptográfica em tempo constante (anti-timing attack)
+  const bufExpected = Buffer.from(expectedToken);
+  const bufReceived = Buffer.from(receivedToken);
+  if (bufExpected.length !== bufReceived.length || !crypto.timingSafeEqual(bufExpected, bufReceived)) {
     console.warn('[WEBHOOK] Requisição rejeitada: token inválido');
     return res.status(403).json({ error: 'Token de autenticação inválido' });
   }
 
+  // ══════════════════════════════════════════════════════════
+  // 2. PARSE E VALIDAÇÃO DO EVENTO
+  // ══════════════════════════════════════════════════════════
   let payload = req.body || {};
   if (typeof payload === 'string') {
     try { payload = JSON.parse(payload); } catch (e) { payload = {}; }
@@ -85,10 +96,10 @@ export default async function handler(req, res) {
   }
 
   const payment = payload.payment || {};
-  const paymentId = payment.id;
+  const paymentId = payment.id || 'unknown';
 
   // ══════════════════════════════════════════════════════════
-  // IDEMPOTÊNCIA — evita processar o mesmo evento duas vezes
+  // 3. IDEMPOTÊNCIA — evita processar o mesmo evento duas vezes
   // ══════════════════════════════════════════════════════════
   const eventKey = `${event}_${paymentId}`;
   if (processedEvents.has(eventKey)) {
@@ -97,57 +108,44 @@ export default async function handler(req, res) {
   }
   processedEvents.add(eventKey);
 
-  // Limita o Set a 1000 entradas para evitar memory leak
   if (processedEvents.size > 1000) {
     const firstKey = processedEvents.values().next().value;
     processedEvents.delete(firstKey);
   }
 
+  // ══════════════════════════════════════════════════════════
+  // 4. ATRIBUIÇÃO ESTRITA POR externalReference (Sem Heurística de Valor)
+  // ══════════════════════════════════════════════════════════
+  const extRef = payment.externalReference;
+  if (!extRef || typeof extRef !== 'string') {
+    console.warn(`[WEBHOOK] Pagamento ${paymentId} recebido sem externalReference. Ignorando alteração de estado.`);
+    return res.status(200).json({ received: true, warning: 'unmatched_reference' });
+  }
+
   try {
     const orders = readOrders();
-    const extRef = payment.externalReference;
-    const paymentVal = parseFloat(payment.value || 0);
 
-    let targetOrderId = null;
-
-    if (extRef && orders[extRef]) {
-      targetOrderId = extRef;
-    } else {
-      const desc = payment.description || '';
-      const match = desc.match(/HZ-\d+/);
-      if (match && orders[match[0]]) {
-        targetOrderId = match[0];
-      } else {
-        // Fallback: pedido mais recente com mesmo valor e status PENDING
-        const keys = Object.keys(orders).reverse();
-        for (const k of keys) {
-          if (orders[k].status === 'PENDING') {
-            const val = parseFloat(orders[k].offerPrice || 0);
-            if (Math.abs(val - paymentVal) < 0.5) {
-              targetOrderId = k;
-              break;
-            }
-          }
-        }
-      }
+    if (!orders[extRef]) {
+      console.warn(`[WEBHOOK] Pagamento ${paymentId} não corresponde a nenhum pedido registrado (${extRef}).`);
+      return res.status(200).json({ received: true, warning: 'unmatched_reference' });
     }
 
-    if (targetOrderId && orders[targetOrderId]) {
-      orders[targetOrderId].status = 'PAID';
-      orders[targetOrderId].paidAt = new Date().toISOString();
-      orders[targetOrderId].paymentDetails = {
-        paymentId,
-        billingType: payment.billingType,
-        value: paymentVal,
-        event
-      };
-      writeOrders(orders);
-      console.log(`[WEBHOOK] ✅ Pedido ${targetOrderId} marcado como PAID`);
-    }
+    // Marca o pedido como APROVADO
+    orders[extRef].status = 'PAID';
+    orders[extRef].paidAt = new Date().toISOString();
+    orders[extRef].paymentDetails = {
+      paymentId,
+      billingType: payment.billingType,
+      value: parseFloat(payment.value || 0),
+      event
+    };
 
-    return res.status(200).json({ received: true, orderId: targetOrderId, status: 'PAID' });
+    writeOrders(orders);
+    console.log(`[WEBHOOK] ✅ Pedido ${extRef} aprovado com sucesso via Asaas`);
+
+    return res.status(200).json({ received: true, orderId: extRef, status: 'PAID' });
   } catch (err) {
     console.error('[WEBHOOK] Erro interno:', err.message);
-    return res.status(200).json({ received: true, error: 'Erro interno processado' });
+    return res.status(500).json({ error: 'Erro interno ao processar webhook' });
   }
 }

@@ -1,8 +1,13 @@
 RewriteEngine On
 
-# Permitir CORS nos endpoints
+# Bloqueio estrito de arquivos confidenciais, bancos de dados JSON, logs e ambiente
+<FilesMatch "\.(json|log|env|git.*)$">
+    Require all denied
+</FilesMatch>
+
+# Permitir CORS controlado nos endpoints
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Origin "https://hizabellai-music.vercel.app"
     Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
     Header set Access-Control-Allow-Headers "Content-Type, Authorization, asaas-access-token"
 </IfModule>
@@ -11,3 +16,4 @@ RewriteEngine On
 RewriteRule ^api/create-order/?$ api/create-order.php [L,QSA]
 RewriteRule ^api/check-status/?$ api/check-status.php [L,QSA]
 RewriteRule ^api/asaas-webhook/?$ api/asaas-webhook.php [L,QSA]
+

@@ -13,3 +13,8 @@ desktop.ini
 
 # Arquivos brutos de áudio (mantendo apenas assets/audio/ com 30s otimizados)
 AMOSTRAS MUSICAIS/
+
+# Ambientes virtuais e dados locais
+docs/security-audit/venv/
+data/
+*.png

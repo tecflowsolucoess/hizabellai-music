@@ -1498,31 +1498,41 @@
     }
 
     function startStatusPolling(orderId, pedido) {
-      if (pollingTimer) clearInterval(pollingTimer);
+      if (pollingTimer) clearTimeout(pollingTimer);
+
+      let attempts = 0;
+      const maxAttempts = 60; // Máximo de 60 checagens (~5 minutos)
+      let currentInterval = 3000; // Inicia em 3s com backoff incremental até 8s
 
       async function check() {
+        attempts++;
         try {
-          // Tenta endpoint com ou sem .php para suporte a XAMPP e Vercel Serverless
-          let res = await fetch(`api/check-status?orderId=${encodeURIComponent(orderId)}`);
-          if (!res.ok) {
-            res = await fetch(`api/check-status.php?orderId=${encodeURIComponent(orderId)}`);
-          }
+          const res = await fetch(`api/check-status?orderId=${encodeURIComponent(orderId)}`);
           if (res.ok) {
             const data = await res.json();
+            // APROVAÇÃO ESTRITA: somente se o backend confirmar status PAID
             if (data && data.status === 'PAID') {
-              clearInterval(pollingTimer);
               pedido.status = 'PAID';
               localStorage.setItem('pedido_hizabellai', JSON.stringify(pedido));
               renderPaidSuccess(orderId, pedido);
+              return;
             }
           }
         } catch (e) {
-          // Fallback silencioso enquanto aguarda resposta de rede
+          // Continua o polling em caso de falha temporária
+        }
+
+        if (attempts < maxAttempts) {
+          currentInterval = Math.min(currentInterval + 500, 8000); // Incrementa 500ms a cada ciclo até o limite de 8s
+          pollingTimer = setTimeout(check, currentInterval);
+        } else {
+          if (modalStatusSub) {
+            modalStatusSub.textContent = "Aguardando confirmação do banco... Você pode atualizar esta página assim que concluir a transferência no Asaas.";
+          }
         }
       }
 
-      check();
-      pollingTimer = setInterval(check, 3500);
+      pollingTimer = setTimeout(check, 3000);
     }
 
     // ═══════════════════════════════════════════════════
@@ -1542,7 +1552,7 @@
         .substring(0, 1000); // Limita tamanho máximo
     }
 
-    function submitOrder() {
+    async function submitOrder() {
       // Coleta e sanitiza todos os inputs
       const clientName    = sanitize(document.getElementById('inputClientName').value.trim());
       const recipientName = sanitize(document.getElementById('inputRecipientName').value.trim());
@@ -1554,15 +1564,8 @@
         return;
       }
 
-      // 1. Gera ID Único do Pedido
-      const orderId = 'HZ-' + Date.now();
-
-      // 2. Monta Objeto do Pedido com dados sanitizados
-      const pedido = {
-        orderId: orderId,
-        status: 'PENDING',
+      const clientPayload = {
         offerId: app.selectedPack.id,
-        offerName: app.selectedPack.name,
         offerPrice: app.selectedPack.price,
         cliente: {
           nome: clientName,
@@ -1571,7 +1574,39 @@
           ritmo: app.selectedGenre,
           clima: app.selectedMood,
           resumo: story
-        },
+        }
+      };
+
+      let orderId = null;
+
+      // 1. Solicita criação segura do pedido no backend (ID gerado criptograficamente pelo servidor)
+      try {
+        const resp = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(clientPayload)
+        });
+        if (resp.ok) {
+          const resData = await resp.json();
+          if (resData && resData.orderId) {
+            orderId = resData.orderId;
+          }
+        }
+      } catch (err) {}
+
+      // Fallback seguro caso haja falha temporária de rede
+      if (!orderId) {
+        orderId = 'HZ-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      }
+
+      // 2. Monta Objeto do Pedido com o ID validado
+      const pedido = {
+        orderId: orderId,
+        status: 'PENDING',
+        offerId: app.selectedPack.id,
+        offerName: app.selectedPack.name,
+        offerPrice: app.selectedPack.price,
+        cliente: clientPayload.cliente,
         createdAt: new Date().toISOString()
       };
 
@@ -1579,17 +1614,10 @@
       localStorage.setItem('pedido_hizabellai', JSON.stringify(pedido));
       localStorage.setItem('hizabellai_order_id', orderId);
 
-      // 4. Envia ao backend Vercel Serverless
-      fetch('/api/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pedido)
-      }).catch(() => { /* Falha silenciosa — localStorage garante persistência */ });
-
-      // 5. Obtém o Link de Checkout do Asaas
+      // 4. Obtém o Link de Checkout do Asaas
       const checkoutUrl = CHECKOUT_LINKS[app.selectedPack.id] || CHECKOUT_LINKS.p2;
 
-      // 6. Abre o Checkout do Asaas em nova aba e ativa tela de aguardo com polling na aba atual
+      // 5. Abre tela de aguardo com polling seguro no backend
       renderPendingState(pedido);
       startStatusPolling(orderId, pedido);
 
@@ -1608,7 +1636,7 @@
     }
 
     function closePaymentModal() {
-      if (pollingTimer) clearInterval(pollingTimer);
+      if (pollingTimer) clearTimeout(pollingTimer);
       paymentModal.classList.add('hidden');
     }
 
@@ -1617,25 +1645,23 @@
     });
 
     /* ══════════════════════════════════════════════════════════════════
-       7. FLUXO PÓS-PAGAMENTO & RETORNO DO ASAAS (?status=pago OU ?orderId=)
+       7. FLUXO PÓS-PAGAMENTO & RETORNO SEGURO DO ASAAS
+       Eliminado: qualquer aprovação por parâmetro de URL (ex: ?status=pago)
+       O status e botão WhatsApp só liberam se o backend responder status PAID.
        ══════════════════════════════════════════════════════════════════ */
     function checkPostPaymentFlow() {
       const params = new URLSearchParams(window.location.search);
       const urlOrderId = params.get('orderId');
-      const isDirectPaid = params.get('status') === 'pago' || 
-                           params.get('status') === 'approved' || 
-                           params.get('status') === 'success' ||
-                           params.has('pago') || 
-                           window.location.hash === '#sucesso';
+      const hasOrderContext = !!urlOrderId || 
+                              params.get('status') === 'aguardo' || 
+                              params.has('orderId') ||
+                              window.location.hash === '#aguardo';
 
-      const isPostPayment = isDirectPaid || 
-                           params.get('status') === 'aguardo' ||
-                           !!urlOrderId;
-
-      if (!isPostPayment) return;
+      if (!hasOrderContext) return;
 
       const raw = localStorage.getItem('pedido_hizabellai');
-      const orderId = urlOrderId || localStorage.getItem('hizabellai_order_id') || ('HZ-' + Date.now());
+      const orderId = urlOrderId || localStorage.getItem('hizabellai_order_id');
+      if (!orderId) return;
 
       let pedido = raw ? JSON.parse(raw) : {
         orderId: orderId,
@@ -1650,14 +1676,9 @@
         }
       };
 
-      if (isDirectPaid) {
-        pedido.status = 'PAID';
-        localStorage.setItem('pedido_hizabellai', JSON.stringify(pedido));
-        renderPaidSuccess(orderId, pedido);
-      } else {
-        renderPendingState(pedido);
-        startStatusPolling(orderId, pedido);
-      }
+      // Sempre exibe estado PENDING e aguarda confirmação real do backend
+      renderPendingState(pedido);
+      startStatusPolling(orderId, pedido);
     }
 
     document.addEventListener('DOMContentLoaded', () => {

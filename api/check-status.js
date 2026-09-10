@@ -1,10 +1,10 @@
 // Vercel Serverless Function - api/check-status.js
-// Com Rate Limiting por IP (máx 60 req/min)
+// Segurança Sênior: Validação Estrita de ID + Proteção de Dados (Data Minimization) + Rate Limiting por IP + CORS Restrito
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
 
-// Mapa em memória para rate limiting (reseta ao reiniciar a função)
+// Mapa em memória para rate limiting (60 req/min por IP)
 const rateLimitMap = new Map();
 
 function isRateLimited(ip) {
@@ -18,26 +18,35 @@ function isRateLimited(ip) {
   }
 
   const record = rateLimitMap.get(ip);
-
-  // Reseta a janela se passou 1 minuto
   if (now - record.startTime > windowMs) {
     rateLimitMap.set(ip, { count: 1, startTime: now });
     return false;
   }
 
   record.count++;
-
   if (record.count > maxRequests) {
-    return true; // Rate limit atingido
+    return true;
   }
 
   return false;
 }
 
 export default async function handler(req, res) {
-  // Security headers
+  // CORS Restrito aos domínios autorizados
+  const allowedOrigins = [
+    'https://hizabellai-music.vercel.app',
+    'https://hizabellaimusic.com.br',
+    'http://localhost:3000',
+    'http://localhost'
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'https://hizabellai-music.vercel.app');
+  }
+
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Access-Control-Allow-Origin', 'https://hizabellai-music.vercel.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -49,7 +58,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  // Rate Limiting por IP
+  // 1. Rate Limiting por IP
   const clientIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim()
     || req.headers['x-real-ip']
     || req.socket?.remoteAddress
@@ -62,9 +71,9 @@ export default async function handler(req, res) {
     });
   }
 
-  // Valida orderId — apenas caracteres seguros
+  // 2. Validação do orderId — padrão imprevisível seguro (HZ- + alfanumérico)
   const { orderId } = req.query;
-  if (!orderId || !/^HZ-\d+$/.test(orderId)) {
+  if (!orderId || typeof orderId !== 'string' || !/^HZ-[A-Za-z0-9_-]{6,64}$/.test(orderId)) {
     return res.status(400).json({ error: 'orderId inválido ou ausente' });
   }
 
@@ -80,12 +89,18 @@ export default async function handler(req, res) {
     }
 
     if (data[orderId]) {
-      // Retorna apenas campos necessários (não expõe dados sensíveis)
+      // Retorna estritamente o status público necessário (Data Minimization - sem dados pessoais de cliente)
       const { status, paidAt } = data[orderId];
-      return res.status(200).json({ orderId, status, paidAt });
+      return res.status(200).json({
+        orderId,
+        status: status || 'PENDING',
+        paidAt: paidAt || null
+      });
     }
-    return res.status(200).json({ orderId, status: 'PENDING' });
+
+    return res.status(200).json({ orderId, status: 'PENDING', paidAt: null });
   } catch (e) {
-    return res.status(200).json({ orderId, status: 'PENDING' });
+    console.error('[CHECK-STATUS] Erro ao consultar pedido:', e.message);
+    return res.status(200).json({ orderId, status: 'PENDING', paidAt: null });
   }
 }
