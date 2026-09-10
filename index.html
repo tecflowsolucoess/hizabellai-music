@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HizabellAi Music | Músicas Personalizadas Feitas Sob Medida</title>
+  <meta name="description" content="Sua história real transformada em uma música de estúdio inesquecível.">
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpeg">
+  <meta name="theme-color" content="#0a0a12">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              teal: '#1b4b5a',
+              tealDark: '#0e2b34',
+              crimson: '#9b2c3a',
+              crimsonDark: '#5c1722',
+              bg: '#080810',
+              card: 'rgba(18, 20, 32, 0.72)',
+              gold: '#f59e0b',
+              accent: '#e11d48'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Cabinet Grotesk', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #07080e;
+      color: #f4f4f5;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       ONDAS FLUIDAS EM CAMADAS (IDÊNTICO À REFERÊNCIA VISUAL)
+       ══════════════════════════════════════════════════════════════════ */
+    .fluid-waves-bg {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: #080911;
+      overflow: hidden;
+    }
+
+    /* Camada Teal (Esquerda/Topo) com curvas orgânicas */
+    .wave-shape-left {
+      position: absolute;
+      top: -15%;
+      left: -25%;
+      width: 95vw;
+      height: 95vh;
+      border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+      background: radial-gradient(circle at 35% 35%, #2a687a 0%, #16434f 45%, #0b252c 75%, transparent 100%);
+      opacity: 0.85;
+      filter: blur(1px);
+    }
+
+    .wave-contour-1 {
+      position: absolute;
+      top: -10%;
+      left: -20%;
+      width: 85vw;
+      height: 85vh;
+      border-radius: 46% 54% 63% 37% / 40% 50% 50% 60%;
+      border: 1.5px solid rgba(82, 185, 207, 0.18);
+      pointer-events: none;
+    }
+
+    .wave-contour-2 {
+      position: absolute;
+      top: -5%;
+      left: -15%;
+      width: 75vw;
+      height: 75vh;
+      border-radius: 50% 50% 58% 42% / 48% 42% 58% 52%;
+      border: 1.5px solid rgba(82, 185, 207, 0.25);
+      pointer-events: none;
+    }
+
+    /* Camada Crimson/Vermelho-Alaranjada (Direita/Fundo) com curvas */
+    .wave-shape-right {
+      position: absolute;
+      bottom: -20%;
+      right: -25%;
+      width: 105vw;
+      height: 105vh;
+      border-radius: 55% 45% 35% 65% / 50% 60% 40% 50%;
+      background: radial-gradient(circle at 65% 65%, #dc2626 0%, #a81c2f 35%, #600f1c 70%, transparent 100%);
+      opacity: 0.85;
+      filter: blur(1px);
+    }
+
+    .wave-contour-3 {
+      position: absolute;
+      bottom: -15%;
+      right: -20%;
+      width: 95vw;
+      height: 95vh;
+      border-radius: 52% 48% 38% 62% / 54% 56% 44% 46%;
+      border: 1.5px solid rgba(251, 113, 133, 0.22);
+      pointer-events: none;
+    }
+
+    .wave-contour-4 {
+      position: absolute;
+      bottom: -10%;
+      right: -15%;
+      width: 85vw;
+      height: 85vh;
+      border-radius: 48% 52% 42% 58% / 58% 52% 48% 42%;
+      border: 1.5px solid rgba(251, 113, 133, 0.3);
+      pointer-events: none;
+    }
+
+    /* Textura Halftone / Granulado sutil */
+    .halftone-overlay {
+      position: absolute;
+      inset: 0;
+      opacity: 0.12;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+      background-size: 14px 14px;
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       DISCO DE VINIL REALISTA (CENTRAL COMO NA IMAGEM)
+       ══════════════════════════════════════════════════════════════════ */
+    .vinyl-master {
+      width: 250px;
+      height: 250px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, 
+        #18181b 0%, 
+        #09090b 18%, 
+        #27272a 20%, 
+        #09090b 22%, 
+        #1c1917 34%, 
+        #27272a 36%, 
+        #09090b 38%, 
+        #1f1f23 52%, 
+        #2e2e38 54%, 
+        #09090b 57%, 
+        #18181b 74%, 
+        #27272a 76%, 
+        #09090b 80%,
+        #1c1917 95%,
+        #050508 100%);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.95),
+        0 0 40px rgba(0, 0, 0, 0.8),
+        inset 0 0 25px rgba(255, 255, 255, 0.1);
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.3s ease;
+    }
+
+    @media (min-width: 640px) {
+      .vinyl-master {
+        width: 290px;
+        height: 290px;
+      }
+    }
+
+    /* Brilho cônico de iluminação no vinil */
+    .vinyl-master::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background: conic-gradient(
+        transparent 0deg,
+        rgba(255, 255, 255, 0.14) 45deg,
+        transparent 90deg,
+        rgba(255, 255, 255, 0.08) 135deg,
+        transparent 180deg,
+        rgba(255, 255, 255, 0.14) 225deg,
+        transparent 270deg,
+        rgba(255, 255, 255, 0.08) 315deg,
+        transparent 360deg
+      );
+      pointer-events: none;
+    }
+
+    /* Rótulo Central do Vinil */
+    .vinyl-label {
+      position: absolute;
+      width: 94px;
+      height: 94px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, #38bdf8 0%, #0284c7 40%, #0369a1 70%, #082f49 100%);
+      border: 3px solid rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Furo central do disco */
+    .vinyl-spindle-hole {
+      width: 14px;
+      height: 14px;
+      border-radius: 9999px;
+      background-color: #07080e;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+      z-index: 10;
+    }
+
+    /* Animação do Vinil girando */
+    .spinning {
+      animation: spinVinyl 8s linear infinite;
+    }
+    .paused {
+      animation-play-state: paused !important;
+    }
+
+    @keyframes spinVinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       GLASSMORPHISM & ESTILO TRANSLÚCIDO
+       ══════════════════════════════════════════════════════════════════ */
+    .glass-box {
+      background: rgba(16, 20, 30, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .glass-pill:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Equalizador animado */
+    .equalizer-bar {
+      width: 3px;
+      border-radius: 9999px;
+      background: #ffffff;
+      animation: bounceEqualizer 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes bounceEqualizer {
+      0% { height: 4px; }
+      100% { height: 18px; }
+    }
+  </style>
+</head>
+
+<body class="relative min-h-screen text-zinc-100 flex flex-col items-center">
+
+  <!-- FUNDO COM AS ONDAS EM CAMADAS DA IMAGEM DE REFERÊNCIA -->
+  <div class="fluid-waves-bg">
+    <div class="wave-shape-left"></div>
+    <div class="wave-contour-1"></div>
+    <div class="wave-contour-2"></div>
+
+    <div class="wave-shape-right"></div>
+    <div class="wave-contour-3"></div>
+    <div class="wave-contour-4"></div>
+
+    <div class="halftone-overlay"></div>
+  </div>
+
+  <!-- CONTAINER PRINCIPAL MOBILE-FIRST (Centralizado em telas grandes e 100% nativo em smartphones) -->
+  <div class="w-full max-w-lg min-h-screen relative z-10 px-4 py-5 flex flex-col pb-28">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         TOP BAR (Seguindo a tipografia e ícones da imagem de referência)
+         ══════════════════════════════════════════════════════════════════ -->
+    <header class="flex items-center justify-between py-2 border-b border-white/10 mb-4">
+      <div class="flex items-center gap-2">
+        <img src="assets/logo.jpeg" alt="Logo" class="w-7 h-7 rounded-full object-cover border border-white/20">
+        <span class="text-xs font-extrabold tracking-widest uppercase text-white">
+          HIZABELLAI MUSIC<span class="text-rose-400">.</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3 text-xs text-zinc-300">
+        <a href="https://www.instagram.com/hizabellaimusic?stkn=NDY0OWQ4amxzbWRn" target="_blank" rel="noopener noreferrer" 
+           class="flex items-center gap-1.5 px-2.5 py-1 rounded-full glass-pill text-[11px] text-zinc-200 hover:text-white transition-all">
+          <svg class="w-3.5 h-3.5 text-rose-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          <span>Instagram</span>
+        </a>
+      </div>
+    </header>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         HERO SECTION COM O VINIL CENTRAL & TIPOGRAFIA DA IMAGEM
+         ══════════════════════════════════════════════════════════════════ -->
+    <section class="flex flex-col items-center text-center my-2">
+      
+      <!-- Tag TITLE como na imagem -->
+      <div class="self-start text-left mb-1">
+        <span class="text-[10px] tracking-widest text-zinc-400 font-bold uppercase block">TITLE</span>
+        <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white leading-none mt-1">
+          Sua História Real
+        </h1>
+        <p class="text-xs text-zinc-300 mt-1 font-light">
+          Feat. Seus Momentos &amp; HizabellAi Studio
+        </p>
+
+        <!-- Ondinha desenhada em vermelho como na foto de referência -->
+        <svg class="w-16 h-4 text-rose-500 my-1" viewBox="0 0 80 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M2 10 Q 15 0, 25 10 T 45 10 T 65 10 T 78 10"/>
+        </svg>
+
+        <h2 class="text-base font-black tracking-wide text-white uppercase">
+          MÚSICA INESQUECÍVEL
+        </h2>
+        <span class="text-[9px] tracking-widest text-zinc-400 font-bold uppercase block">PRODUÇÃO EXCLUSIVA</span>
+      </div>
+
+      <!-- O DISCO DE VINIL REALISTA GIRATÓRIO CENTRAL -->
+      <div class="my-6 relative flex items-center justify-center">
+        
+        <div id="masterVinylDisk" class="vinyl-master flex items-center justify-center">
+          <!-- Rótulo Central Estilizado (com arte e texto) -->
+          <div class="vinyl-label text-center p-1">
+            <span class="text-[9px] font-black text-white tracking-widest leading-none">HIZABELLAI</span>
+            <span class="text-[7px] text-sky-200 tracking-tighter uppercase font-semibold">CUSTOM TRACK</span>
+            <!-- Furo central do spindle -->
+            <div class="vinyl-spindle-hole mt-1"></div>
+            <span class="text-[6px] text-sky-100/80 font-mono mt-0.5">33 RPM • HD</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CONTROLES DE REPRODUÇÃO (Exatamente no layout da foto de referência) -->
+      <div class="flex items-center justify-center gap-7 text-white mt-1">
+        <!-- Prev Button -->
+        <button id="btnPrev" class="text-white hover:text-rose-400 transition-colors active:scale-90" aria-label="Faixa anterior">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+
+        <!-- Play / Pause Principal -->
+        <button id="btnPlayMaster" class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 glass-pill flex items-center justify-center text-white active:scale-95 transition-all shadow-lg" aria-label="Play/Pause">
+          <svg id="masterPlayIcon" class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="masterPauseIcon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+
+        <!-- Next Button -->
+        <button id="btnNext" class="text-white hover:text-rose-400 transition-colors active:scale-90" aria-label="Próxima faixa">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+      </div>
+
+      <!-- Título da Faixa Ativa e Artista -->
+      <div class="mt-2.5">
+        <h3 id="currentSongTitle" class="text-sm font-bold text-white tracking-wide">"Promessa de Amor"</h3>
+        <p id="currentSongSubtitle" class="text-xs text-zinc-300">Voz Suave, Violão Acústico &amp; Emoção</p>
+      </div>
+
+      <!-- Barra de Progresso Fina -->
+      <div class="w-full max-w-xs mt-2">
+        <div class="w-full bg-white/10 rounded-full h-1 overflow-hidden cursor-pointer">
+          <div id="trackProgress" class="bg-rose-500 h-full w-0 transition-all duration-200"></div>
+        </div>
+        <div class="flex justify-between text-[10px] text-zinc-400 font-mono mt-1 px-0.5">
+          <span id="labelCurrentTime">0:00</span>
+          <span id="labelDuration">0:30</span>
+        </div>
+      </div>
+
+      <!-- Botão Formato Cápsula "CRIAR MINHA MÚSICA" (Estilo "ADD TO SPOTIFY" da foto) -->
+      <a href="#configurador" 
+         class="mt-4 px-6 py-2.5 rounded-full glass-pill text-xs font-bold tracking-wider uppercase text-white hover:border-white/60 transition-all flex items-center gap-2 shadow-lg shadow-black/40">
+        <span>Criar Minha Música Agora</span>
+        <span class="text-sm">🎵</span>
+      </a>
+
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         CARD FLUTUANTE DE PLAYLIST (TRANSLÚCIDO COMO NA FOTO)
+         ══════════════════════════════════════════════════════════════════ -->
+    <section class="my-5 glass-box rounded-3xl p-4 border border-white/15 shadow-2xl">
+      <div class="flex items-center justify-between mb-3 px-1">
+        <span class="text-[11px] font-bold tracking-wider uppercase text-zinc-300 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+          Amostras Musicais de Estúdio
+        </span>
+        <span class="text-[10px] text-zinc-400 font-mono">320kbps HD</span>
+      </div>
+
+      <!-- Lista de Faixas com Capinhas como no Card da Direita da Referência -->
+      <div class="space-y-2" id="samplePlaylist">
+        
+        <!-- Faixa 1 -->
+        <div data-track="0" class="playlist-item active-item flex items-center justify-between p-2.5 rounded-2xl bg-white/10 border border-white/20 transition-all cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-400 flex items-center justify-center text-lg shadow-md shrink-0">
+              🎸
+            </div>
+            <div class="text-left">
+              <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
+                <span>Promessa de Amor</span>
+                <span class="playing-indicator text-[10px] text-rose-400">● Tocando</span>
+              </h4>
+              <p class="text-[10px] text-zinc-300">Acústico Romântico</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-mono text-zinc-400">0:30</span>
+            <div class="play-indicator-icon text-white text-xs">▶</div>
+          </div>
+        </div>
+
+        <!-- Faixa 2 -->
+        <div data-track="1" class="playlist-item flex items-center justify-between p-2.5 rounded-2xl bg-black/20 border border-white/5 hover:border-white/15 transition-all cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-orange-400 flex items-center justify-center text-lg shadow-md shrink-0">
+              🥁
+            </div>
+            <div class="text-left">
+              <h4 class="text-xs font-bold text-white">Nosso Samba Retrô</h4>
+              <p class="text-[10px] text-zinc-400">Pagode &amp; Cavaquinho</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-mono text-zinc-400">0:30</span>
+            <div class="play-indicator-icon text-zinc-400 text-xs">▶</div>
+          </div>
+        </div>
+
+        <!-- Faixa 3 -->
+        <div data-track="2" class="playlist-item flex items-center justify-between p-2.5 rounded-2xl bg-black/20 border border-white/5 hover:border-white/15 transition-all cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-700 to-indigo-500 flex items-center justify-center text-lg shadow-md shrink-0">
+              🎹
+            </div>
+            <div class="text-left">
+              <h4 class="text-xs font-bold text-white">Noite Inesquecível</h4>
+              <p class="text-[10px] text-zinc-400">Trap Love &amp; 808</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-mono text-zinc-400">0:30</span>
+            <div class="play-indicator-icon text-zinc-400 text-xs">▶</div>
+          </div>
+        </div>
+
+        <!-- Faixa 4 -->
+        <div data-track="3" class="playlist-item flex items-center justify-between p-2.5 rounded-2xl bg-black/20 border border-white/5 hover:border-white/15 transition-all cursor-pointer">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-400 flex items-center justify-center text-lg shadow-md shrink-0">
+              🤠
+            </div>
+            <div class="text-left">
+              <h4 class="text-xs font-bold text-white">Amor de Novela</h4>
+              <p class="text-[10px] text-zinc-400">Sertanejo Romântico</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-mono text-zinc-400">0:30</span>
+            <div class="play-indicator-icon text-zinc-400 text-xs">▶</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         COMO FUNCIONA COM NUMERAÇÃO VERTICAL (ESTILO 01, 02, 03 DA REFERÊNCIA)
+         ══════════════════════════════════════════════════════════════════ -->
+    <section class="my-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-[10px] tracking-widest text-zinc-400 font-bold uppercase">PROCESSO</span>
+          <h2 class="text-lg font-black text-white">Como Funciona</h2>
+        </div>
+        <span class="text-xs text-rose-400 font-mono">Passo a Passo</span>
+      </div>
+
+      <div class="space-y-3">
+        <!-- 01 -->
+        <div class="glass-box rounded-2xl p-3.5 flex items-start gap-3.5">
+          <span class="text-base font-black font-mono text-rose-400">01</span>
+          <div>
+            <h3 class="text-xs font-bold text-white">Escolha Seu Formato</h3>
+            <p class="text-[11px] text-zinc-300 mt-0.5">Opte por Só a Canção (Áudio HD) ou Canção + Clipe com Fotos sincronizadas.</p>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="glass-box rounded-2xl p-3.5 flex items-start gap-3.5">
+          <span class="text-base font-black font-mono text-teal-400">02</span>
+          <div>
+            <h3 class="text-xs font-bold text-white">Conte os Detalhes da História</h3>
+            <p class="text-[11px] text-zinc-300 mt-0.5">Informe os nomes, momentos marcantes, ritmo desejado e clima da canção.</p>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="glass-box rounded-2xl p-3.5 flex items-start gap-3.5">
+          <span class="text-base font-black font-mono text-amber-400">03</span>
+          <div>
+            <h3 class="text-xs font-bold text-white">Pagamento Seguro &amp; Entrega WhatsApp</h3>
+            <p class="text-[11px] text-zinc-300 mt-0.5">Pague via Mercado Pago (PIX ou Cartão) e receba a música pronta diretamente no WhatsApp.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         4 PACOTES DE COMPRA & CONFIGURADOR INTERATIVO
+         ══════════════════════════════════════════════════════════════════ -->
+    <section id="configurador" class="my-6 scroll-mt-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-[10px] tracking-widest text-zinc-400 font-bold uppercase">ESCOLHA SEU PACOTE</span>
+          <h2 class="text-lg font-black text-white">Configurador de Pedido</h2>
+        </div>
+        <span class="text-xs text-emerald-400 font-medium">Preços Promocionais</span>
+      </div>
+
+      <div class="space-y-3" id="packageList">
+        
+        <!-- Pacote 1 -->
+        <div class="package-option glass-box rounded-2xl p-4 border border-white/10 transition-all cursor-pointer"
+             data-id="1" data-name="Só a Canção (Áudio MP3 HD)" data-price="29.90">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">🎵</span>
+                <h3 class="text-xs font-extrabold text-white">Só a Canção (Áudio MP3 HD)</h3>
+              </div>
+              <p class="text-[11px] text-zinc-300 mt-1">Ideal para ouvir em alto-falantes ou mandar por áudio.</p>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="text-[10px] text-zinc-500 line-through block">De R$ 69,90</span>
+              <span class="text-base font-black text-white">R$ 29,90</span>
+            </div>
+          </div>
+          <div class="mt-2 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
+            <span>Formato: Áudio HD</span>
+            <span class="radio-check text-xs text-zinc-500">○ Selecionar</span>
+          </div>
+        </div>
+
+        <!-- Pacote 2 (Mais Escolhido) -->
+        <div class="package-option glass-box rounded-2xl p-4 border-2 border-rose-500/80 bg-rose-950/20 transition-all cursor-pointer relative shadow-lg shadow-rose-950/30"
+             data-id="2" data-name="Canção + Clipe com Fotos (30s)" data-price="47.00">
+          <div class="absolute -top-2.5 right-4 bg-rose-600 text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow">
+            🔥 MAIS ESCOLHIDO
+          </div>
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">🎬</span>
+                <h3 class="text-xs font-extrabold text-white">Canção + Clipe com Fotos (30s)</h3>
+              </div>
+              <p class="text-[11px] text-rose-200 mt-1">Sincronizado com o refrão mais marcante para Reels, Shorts e TikTok.</p>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="text-[10px] text-zinc-500 line-through block">De R$ 97,00</span>
+              <span class="text-lg font-black text-rose-300">R$ 47,00</span>
+            </div>
+          </div>
+          <div class="mt-2 pt-2 border-t border-rose-500/20 flex items-center justify-between text-[11px] text-rose-300 font-medium">
+            <span>Formato: Áudio + Clipe 30s</span>
+            <span class="radio-check text-xs text-rose-400 font-bold">● Selecionado</span>
+          </div>
+        </div>
+
+        <!-- Pacote 3 -->
+        <div class="package-option glass-box rounded-2xl p-4 border border-white/10 transition-all cursor-pointer"
+             data-id="3" data-name="Canção + Clipe com Fotos (45s)" data-price="57.00">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">✨</span>
+                <h3 class="text-xs font-extrabold text-white">Canção + Clipe com Fotos (45s)</h3>
+              </div>
+              <p class="text-[11px] text-zinc-300 mt-1">Narração visual completa com mais fotos e letra na tela.</p>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="text-[10px] text-zinc-500 line-through block">De R$ 119,00</span>
+              <span class="text-base font-black text-white">R$ 57,00</span>
+            </div>
+          </div>
+          <div class="mt-2 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
+            <span>Formato: Áudio + Clipe 45s</span>
+            <span class="radio-check text-xs text-zinc-500">○ Selecionar</span>
+          </div>
+        </div>
+
+        <!-- Pacote 4 -->
+        <div class="package-option glass-box rounded-2xl p-4 border border-white/10 transition-all cursor-pointer"
+             data-id="4" data-name="Canção + Clipe Completo (1 Minuto)" data-price="67.00">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm">💎</span>
+                <h3 class="text-xs font-extrabold text-white">Canção + Clipe Completo (1 Minuto)</h3>
+              </div>
+              <p class="text-[11px] text-zinc-300 mt-1">Experiência completa com galeria de memórias e clímax musical.</p>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="text-[10px] text-zinc-500 line-through block">De R$ 149,00</span>
+              <span class="text-base font-black text-white">R$ 67,00</span>
+            </div>
+          </div>
+          <div class="mt-2 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
+            <span>Formato: Áudio + Vídeo 1 Min</span>
+            <span class="radio-check text-xs text-zinc-500">○ Selecionar</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         FORMULÁRIO INTEGRADO DE BRIEFING
+         ══════════════════════════════════════════════════════════════════ -->
+    <section id="briefingFormSection" class="my-6 glass-box rounded-3xl p-5 border border-white/15">
+      <div class="mb-4">
+        <span class="text-[10px] tracking-widest text-zinc-400 font-bold uppercase">BRIEFING DA MÚSICA</span>
+        <h2 class="text-lg font-black text-white">Conte Sua História</h2>
+        <p class="text-xs text-zinc-400 mt-0.5">Preencha as informações para a composição da canção</p>
+      </div>
+
+      <form id="musicBriefingForm" class="space-y-4" onsubmit="event.preventDefault(); submitOrder();">
+        
+        <!-- Resumo do Pacote Ativo -->
+        <div class="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-rose-300 uppercase font-bold">Pacote Selecionado</span>
+            <p id="boxPackageName" class="text-xs font-bold text-white">Canção + Clipe com Fotos (30s)</p>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-zinc-400">Valor</span>
+            <p id="boxPackagePrice" class="text-sm font-black text-rose-400">R$ 47,00</p>
+          </div>
+        </div>
+
+        <!-- Nome do Cliente -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">Seu Nome Completo *</label>
+          <input type="text" id="inputClientName" required placeholder="Ex: Ana Clara"
+                 class="w-full h-11 px-3.5 rounded-xl bg-black/30 border border-white/15 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors">
+        </div>
+
+        <!-- Nome do Homenageado -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">Nome do Homenageado(a) *</label>
+          <input type="text" id="inputRecipientName" required placeholder="Ex: Felipe (namorado)"
+                 class="w-full h-11 px-3.5 rounded-xl bg-black/30 border border-white/15 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors">
+        </div>
+
+        <!-- WhatsApp com DDD -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1">WhatsApp com DDD (para envio da canção) *</label>
+          <input type="tel" id="inputClientWhatsapp" required placeholder="(81) 99999-9999" maxlength="15"
+                 class="w-full h-11 px-3.5 rounded-xl bg-black/30 border border-white/15 text-sm text-white font-mono focus:outline-none focus:border-rose-500 transition-colors">
+        </div>
+
+        <!-- Gênero Musical Tags -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Gênero Musical Desejado *</label>
+          <div class="flex flex-wrap gap-2" id="genreTagList">
+            <button type="button" class="genre-pill active-pill px-3 py-1.5 rounded-full text-xs font-medium bg-rose-600 border border-rose-400 text-white" data-genre="Poesia Acústica (Voz e Violão)">
+              🎸 Acústico
+            </button>
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Trap Love Melódico">
+              🎹 Trap Love
+            </button>
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Sertanejo Romântico">
+              🤠 Sertanejo
+            </button>
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="Pagode / Samba Love">
+              🥁 Pagode Love
+            </button>
+            <button type="button" class="genre-pill px-3 py-1.5 rounded-full text-xs font-medium glass-pill text-zinc-300" data-genre="MPB Moderna">
+              ☕ MPB
+            </button>
+          </div>
+        </div>
+
+        <!-- Clima da Canção -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Clima / Emoção da Música *</label>
+          <div class="grid grid-cols-3 gap-2" id="moodOptionList">
+            <button type="button" class="mood-pill active-pill p-2 rounded-xl text-center text-xs font-medium bg-rose-600 border border-rose-400 text-white" data-mood="Emocionante / Para Chorar de Emoção">
+              🥺 Emocionante
+            </button>
+            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Romântico Leve">
+              💕 Romântico
+            </button>
+            <button type="button" class="mood-pill p-2 rounded-xl text-center text-xs font-medium glass-pill text-zinc-300" data-mood="Alegre / Festa">
+              🥳 Alegre / Festa
+            </button>
+          </div>
+        </div>
+
+        <!-- Detalhes da História -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1 flex items-center justify-between">
+            <span>Conte os detalhes da história *</span>
+            <span id="storyCharCount" class="text-[10px] text-zinc-400">0 caracteres</span>
+          </label>
+          <textarea id="inputStory" required rows="4" 
+                    placeholder="Conte como se conheceram, apelidos fofos, piadas internas, momentos que superaram juntos..." 
+                    class="w-full p-3 rounded-xl bg-black/30 border border-white/15 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-rose-500 transition-colors leading-relaxed"></textarea>
+        </div>
+
+        <!-- Botão de Finalização -->
+        <button type="submit" 
+                class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-extrabold text-sm shadow-xl shadow-rose-950/50 flex items-center justify-center gap-2 transition-all active:scale-95">
+          <span>Avançar para Pagamento Seguro</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+
+      </form>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         FAQ COM ACCORDION
+         ══════════════════════════════════════════════════════════════════ -->
+    <section class="my-6">
+      <div class="mb-4">
+        <span class="text-[10px] tracking-widest text-zinc-400 font-bold uppercase">DÚVIDAS FREQUENTES</span>
+        <h2 class="text-lg font-black text-white">Perguntas &amp; Respostas</h2>
+      </div>
+
+      <div class="space-y-2.5">
+        
+        <div class="faq-card glass-box rounded-2xl border border-white/10 overflow-hidden">
+          <button class="faq-toggle w-full p-3.5 text-left text-xs font-bold text-white flex justify-between items-center">
+            <span>Como funciona o pagamento pelo Mercado Pago?</span>
+            <span class="text-zinc-400 text-sm font-light">↓</span>
+          </button>
+          <div class="faq-answer px-3.5 pb-3.5 text-[11px] text-zinc-300 leading-relaxed hidden">
+            Você pode pagar por <strong>PIX instantâneo</strong> (liberação em segundos) ou <strong>Cartão de Crédito</strong> através do Checkout oficial do Mercado Pago com total proteção.
+          </div>
+        </div>
+
+        <div class="faq-card glass-box rounded-2xl border border-white/10 overflow-hidden">
+          <button class="faq-toggle w-full p-3.5 text-left text-xs font-bold text-white flex justify-between items-center">
+            <span>Como envio as fotos para os clipes com fotos?</span>
+            <span class="text-zinc-400 text-sm font-light">↓</span>
+          </button>
+          <div class="faq-answer px-3.5 pb-3.5 text-[11px] text-zinc-300 leading-relaxed hidden">
+            Após a confirmação do pedido, você envia as fotos diretamente na conversa do <strong>WhatsApp</strong> do nosso suporte para a montagem do clipe sincronizado com a canção.
+          </div>
+        </div>
+
+        <div class="faq-card glass-box rounded-2xl border border-white/10 overflow-hidden">
+          <button class="faq-toggle w-full p-3.5 text-left text-xs font-bold text-white flex justify-between items-center">
+            <span>Qual é o prazo de entrega da música?</span>
+            <span class="text-zinc-400 text-sm font-light">↓</span>
+          </button>
+          <div class="faq-answer px-3.5 pb-3.5 text-[11px] text-zinc-300 leading-relaxed hidden">
+            Entregamos a versão final em <strong>até 24 horas</strong> no seu WhatsApp. Havendo urgência para uma data especial, nossa equipe prioriza seu atendimento.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         FOOTER & INSTAGRAM
+         ══════════════════════════════════════════════════════════════════ -->
+    <footer class="mt-8 pt-4 border-t border-white/10 text-center text-zinc-400 text-[11px]">
+      <p class="font-bold text-white mb-1">HizabellAi Music</p>
+      <p>Sua história transformada em canção exclusiva.</p>
+      <p class="mt-2 text-[10px] text-zinc-500">© 2026 Todos os direitos reservados. Pagamentos via Mercado Pago.</p>
+    </footer>
+
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       STICKY BOTTOM BAR (MOBILE-FIRST CTA)
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-[#080911]/90 backdrop-blur-xl border-t border-white/10 px-4 py-3 sm:hidden">
+    <div class="max-w-lg mx-auto flex items-center justify-between gap-3">
+      <div>
+        <span class="text-[10px] text-zinc-400 block" id="stickyPackTitle">Canção + Clipe (30s)</span>
+        <span class="text-sm font-black text-rose-400" id="stickyPackPrice">R$ 47,00</span>
+      </div>
+      <a href="#briefingFormSection" 
+         class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 text-white font-black text-xs text-center shadow-lg active:scale-95 transition-all">
+        Criar Minha Música 🎵
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       MODAL DE PAGAMENTO & CHECKOUT MERCADO PAGO / WHATSAPP
+       ══════════════════════════════════════════════════════════════════ -->
+  <div id="paymentModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-sm glass-box rounded-3xl p-5 border border-white/20 shadow-2xl relative text-left">
+      
+      <!-- Botão Fechar -->
+      <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 rounded-full bg-white/10">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div class="text-center pb-3 border-b border-white/10">
+        <div class="w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-1.5 border border-rose-500/40">
+          ✓
+        </div>
+        <h3 class="text-base font-extrabold text-white">Pedido Gerado com Sucesso!</h3>
+        <p class="text-xs text-zinc-300">Escolha como prefere pagar e concluir</p>
+      </div>
+
+      <!-- Resumo -->
+      <div class="my-3 p-3 rounded-xl bg-black/40 border border-white/10 space-y-1 text-xs">
+        <div class="flex justify-between">
+          <span class="text-zinc-400">Pacote:</span>
+          <span id="modalPackName" class="font-bold text-white">Canção + Clipe 30s</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-zinc-400">Total:</span>
+          <span id="modalPackPrice" class="font-black text-rose-400">R$ 47,00</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-zinc-400">Homenagem para:</span>
+          <span id="modalRecipient" class="text-white font-medium">Felipe</span>
+        </div>
+      </div>
+
+      <!-- FORMAS DE PAGAMENTO -->
+      <div class="space-y-2">
+        
+        <!-- Opção 1: Mercado Pago Link Direto -->
+        <a id="btnMercadoPagoLink" href="#" target="_blank" rel="noopener noreferrer"
+           class="w-full py-3 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-950/50 transition-all">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+          <span>Pagar no Mercado Pago (PIX / Cartão)</span>
+        </a>
+
+        <!-- Opção 2: PIX Copia e Cola Direto -->
+        <div class="p-2.5 rounded-xl bg-white/5 border border-white/10">
+          <div class="flex justify-between items-center mb-1.5">
+            <span class="text-[11px] text-zinc-300 font-bold">Chave PIX Oficial:</span>
+            <button onclick="copyPixKey()" id="btnCopyPix" class="text-[10px] bg-rose-600 hover:bg-rose-500 text-white font-bold px-2 py-0.5 rounded transition-all">
+              Copiar Chave PIX
+            </button>
+          </div>
+          <p id="pixKeyText" class="text-[10px] font-mono text-zinc-400 truncate bg-black/40 p-1 rounded border border-white/5">
+            pix@hizabellaimusic.com
+          </p>
+        </div>
+
+        <!-- Opção 3: Enviar Briefing no WhatsApp -->
+        <a id="btnWhatsappOrder" href="#" target="_blank" rel="noopener noreferrer"
+           class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>Confirmar e Enviar no WhatsApp</span>
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       CONFIGURAÇÕES E SCRIPTS JAVASCRIPT
+       ══════════════════════════════════════════════════════════════════ -->
+  <script>
+    /* ══════════════════════════════════════════════════════════════════
+       1. MAPA DE PACOTES, CHECKOUT E WHATSAPP
+       ══════════════════════════════════════════════════════════════════ */
+    const CHECKOUT_LINKS = {
+      p1: "LINK_MERCADO_PAGO_OU_ASAAS_29_90",
+      p2: "LINK_MERCADO_PAGO_OU_ASAAS_47_00",
+      p3: "LINK_MERCADO_PAGO_OU_ASAAS_57_00",
+      p4: "LINK_MERCADO_PAGO_OU_ASAAS_67_00"
+    };
+
+    const WHATSAPP_NUMERO = "5581984851908"; // Número Oficial de Atendimento HizabellAi Music
+    const PIX_KEY_OFICIAL = "pix@hizabellaimusic.com"; // Chave PIX oficial da sua conta
+
+    /* Estado da Aplicação */
+    const app = {
+      selectedPack: { id: "p2", name: "Canção + Clipe com Fotos (30s)", price: "47.00" },
+      selectedGenre: "Poesia Acústica (Voz e Violão)",
+      selectedMood: "Emocionante / Para Chorar de Emoção",
+      isPlaying: false,
+      trackIndex: 0,
+      timer: null,
+      currentTime: 0,
+      duration: 30
+    };
+
+    /* Amostras da Playlist de Demonstração */
+    const tracks = [
+      { title: "Promessa de Amor", subtitle: "Voz Suave, Violão Acústico & Emoção", notes: [261.63, 329.63, 392.00, 523.25] },
+      { title: "Nosso Samba Retrô", subtitle: "Pagode & Cavaquinho Romântico", notes: [293.66, 369.99, 440.00, 587.33] },
+      { title: "Noite Inesquecível", subtitle: "Trap Love & 808 Melódico", notes: [164.81, 220.00, 261.63, 329.63] },
+      { title: "Amor de Novela", subtitle: "Sertanejo Romântico Marcante", notes: [329.63, 392.00, 493.88, 587.33] }
+    ];
+
+    /* ══════════════════════════════════════════════════════════════════
+       2. ÁUDIO SÍNTESE NATIVO (Web Audio API)
+       ══════════════════════════════════════════════════════════════════ */
+    let audioContext = null;
+    let synthLoop = null;
+
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+    }
+
+    function triggerNote(freq) {
+      if (!audioContext) return;
+      try {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+        gain.gain.setValueAtTime(0.001, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.15, audioContext.currentTime + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.9);
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.start();
+        osc.stop(audioContext.currentTime + 0.9);
+      } catch (e) {}
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       3. PLAYER E VINIL GIRATÓRIO
+       ══════════════════════════════════════════════════════════════════ */
+    const masterVinylDisk = document.getElementById('masterVinylDisk');
+    const btnPlayMaster = document.getElementById('btnPlayMaster');
+    const masterPlayIcon = document.getElementById('masterPlayIcon');
+    const masterPauseIcon = document.getElementById('masterPauseIcon');
+    const currentSongTitle = document.getElementById('currentSongTitle');
+    const currentSongSubtitle = document.getElementById('currentSongSubtitle');
+    const trackProgress = document.getElementById('trackProgress');
+    const labelCurrentTime = document.getElementById('labelCurrentTime');
+
+    function updateTrackInfo() {
+      const t = tracks[app.trackIndex];
+      currentSongTitle.textContent = `"${t.title}"`;
+      currentSongSubtitle.textContent = t.subtitle;
+      app.currentTime = 0;
+      labelCurrentTime.textContent = "0:00";
+      trackProgress.style.width = "0%";
+
+      document.querySelectorAll('.playlist-item').forEach((item, idx) => {
+        if (idx === app.trackIndex) {
+          item.classList.add('active-item', 'bg-white/10', 'border-white/20');
+          item.classList.remove('bg-black/20', 'border-white/5');
+          const p = item.querySelector('.play-indicator-icon');
+          if (p) p.textContent = app.isPlaying ? "||" : "▶";
+        } else {
+          item.classList.remove('active-item', 'bg-white/10', 'border-white/20');
+          item.classList.add('bg-black/20', 'border-white/5');
+          const p = item.querySelector('.play-indicator-icon');
+          if (p) p.textContent = "▶";
+        }
+      });
+    }
+
+    function togglePlay() {
+      initAudio();
+      if (app.isPlaying) {
+        pauseSong();
+      } else {
+        playSong();
+      }
+    }
+
+    function playSong() {
+      app.isPlaying = true;
+      masterPlayIcon.classList.add('hidden');
+      masterPauseIcon.classList.remove('hidden');
+
+      masterVinylDisk.classList.add('spinning');
+      masterVinylDisk.classList.remove('paused');
+
+      clearInterval(synthLoop);
+      let step = 0;
+      const t = tracks[app.trackIndex];
+      synthLoop = setInterval(() => {
+        if (!app.isPlaying) return;
+        triggerNote(t.notes[step % t.notes.length]);
+        step++;
+      }, 750);
+
+      clearInterval(app.timer);
+      app.timer = setInterval(() => {
+        app.currentTime++;
+        const pct = (app.currentTime / app.duration) * 100;
+        trackProgress.style.width = `${Math.min(pct, 100)}%`;
+        labelCurrentTime.textContent = `0:${app.currentTime < 10 ? '0' : ''}${app.currentTime}`;
+        if (app.currentTime >= app.duration) nextSong();
+      }, 1000);
+
+      updateTrackInfo();
+    }
+
+    function pauseSong() {
+      app.isPlaying = false;
+      masterPlayIcon.classList.remove('hidden');
+      masterPauseIcon.classList.add('hidden');
+
+      masterVinylDisk.classList.add('paused');
+
+      clearInterval(synthLoop);
+      clearInterval(app.timer);
+      updateTrackInfo();
+    }
+
+    function nextSong() {
+      app.trackIndex = (app.trackIndex + 1) % tracks.length;
+      updateTrackInfo();
+      if (app.isPlaying) playSong();
+    }
+
+    function prevSong() {
+      app.trackIndex = (app.trackIndex - 1 + tracks.length) % tracks.length;
+      updateTrackInfo();
+      if (app.isPlaying) playSong();
+    }
+
+    btnPlayMaster.addEventListener('click', togglePlay);
+    masterVinylDisk.addEventListener('click', togglePlay);
+    document.getElementById('btnNext').addEventListener('click', nextSong);
+    document.getElementById('btnPrev').addEventListener('click', prevSong);
+
+    document.querySelectorAll('.playlist-item').forEach(item => {
+      item.addEventListener('click', () => {
+        app.trackIndex = parseInt(item.getAttribute('data-track'), 10);
+        updateTrackInfo();
+        playSong();
+      });
+    });
+
+    /* ══════════════════════════════════════════════════════════════════
+       4. SELEÇÃO DE PACOTES (MAPEAMENTO P1, P2, P3, P4)
+       ══════════════════════════════════════════════════════════════════ */
+    const packageOptions = document.querySelectorAll('.package-option');
+    const boxPackageName = document.getElementById('boxPackageName');
+    const boxPackagePrice = document.getElementById('boxPackagePrice');
+    const stickyPackTitle = document.getElementById('stickyPackTitle');
+    const stickyPackPrice = document.getElementById('stickyPackPrice');
+
+    function applyPackageSelection(opt) {
+      packageOptions.forEach(o => {
+        o.classList.remove('border-2', 'border-rose-500/80', 'bg-rose-950/20');
+        o.classList.add('border-white/10');
+        const check = o.querySelector('.radio-check');
+        if (check) {
+          check.textContent = "○ Selecionar";
+          check.classList.remove('text-rose-400', 'font-bold');
+          check.classList.add('text-zinc-500');
+        }
+      });
+
+      opt.classList.remove('border-white/10');
+      opt.classList.add('border-2', 'border-rose-500/80', 'bg-rose-950/20');
+      const activeCheck = opt.querySelector('.radio-check');
+      if (activeCheck) {
+        activeCheck.textContent = "● Selecionado";
+        activeCheck.classList.add('text-rose-400', 'font-bold');
+        activeCheck.classList.remove('text-zinc-500');
+      }
+
+      const rawId = opt.getAttribute('data-id') || "2";
+      const normalizedId = rawId.startsWith('p') ? rawId : ('p' + rawId);
+
+      app.selectedPack.id = normalizedId;
+      app.selectedPack.name = opt.getAttribute('data-name');
+      app.selectedPack.price = opt.getAttribute('data-price');
+
+      const formatted = `R$ ${app.selectedPack.price.replace('.', ',')}`;
+      boxPackageName.textContent = app.selectedPack.name;
+      boxPackagePrice.textContent = formatted;
+      stickyPackTitle.textContent = app.selectedPack.name;
+      stickyPackPrice.textContent = formatted;
+    }
+
+    packageOptions.forEach(opt => {
+      opt.addEventListener('click', () => {
+        applyPackageSelection(opt);
+      });
+    });
+
+    /* ══════════════════════════════════════════════════════════════════
+       5. SELETORES DE BRIEFING (GÊNERO, CLIMA, MÁSCARAS)
+       ══════════════════════════════════════════════════════════════════ */
+    document.querySelectorAll('.genre-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.genre-pill').forEach(p => {
+          p.classList.remove('bg-rose-600', 'border-rose-400', 'text-white');
+          p.classList.add('glass-pill', 'text-zinc-300');
+        });
+        pill.classList.remove('glass-pill', 'text-zinc-300');
+        pill.classList.add('bg-rose-600', 'border-rose-400', 'text-white');
+        app.selectedGenre = pill.getAttribute('data-genre');
+      });
+    });
+
+    document.querySelectorAll('.mood-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.mood-pill').forEach(p => {
+          p.classList.remove('bg-rose-600', 'border-rose-400', 'text-white');
+          p.classList.add('glass-pill', 'text-zinc-300');
+        });
+        pill.classList.remove('glass-pill', 'text-zinc-300');
+        pill.classList.add('bg-rose-600', 'border-rose-400', 'text-white');
+        app.selectedMood = pill.getAttribute('data-mood');
+      });
+    });
+
+    const inputClientWhatsapp = document.getElementById('inputClientWhatsapp');
+    inputClientWhatsapp.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      if (v.length > 6) {
+        e.target.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      } else if (v.length > 2) {
+        e.target.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      } else if (v.length > 0) {
+        e.target.value = `(${v}`;
+      } else {
+        e.target.value = '';
+      }
+    });
+
+    const inputStory = document.getElementById('inputStory');
+    const storyCharCount = document.getElementById('storyCharCount');
+    inputStory.addEventListener('input', (e) => {
+      storyCharCount.textContent = `${e.target.value.length} caracteres`;
+    });
+
+    /* Accordion FAQ */
+    document.querySelectorAll('.faq-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const ans = btn.nextElementSibling;
+        const isClosed = ans.classList.contains('hidden');
+        document.querySelectorAll('.faq-answer').forEach(a => a.classList.add('hidden'));
+        if (isClosed) ans.classList.remove('hidden');
+      });
+    });
+
+    /* ══════════════════════════════════════════════════════════════════
+       6. PERSISTÊNCIA EM LOCALSTORAGE & SUBMISSÃO DO PEDIDO
+       ══════════════════════════════════════════════════════════════════ */
+    const paymentModal = document.getElementById('paymentModal');
+    const modalPackName = document.getElementById('modalPackName');
+    const modalPackPrice = document.getElementById('modalPackPrice');
+    const modalRecipient = document.getElementById('modalRecipient');
+    const btnMercadoPagoLink = document.getElementById('btnMercadoPagoLink');
+    const btnWhatsappOrder = document.getElementById('btnWhatsappOrder');
+    const pixKeyText = document.getElementById('pixKeyText');
+
+    if (pixKeyText) pixKeyText.textContent = PIX_KEY_OFICIAL;
+
+    function buildWhatsAppMessage(dados) {
+      const nomes = `${dados.clienteNome || 'Cliente'} para ${dados.homenageadoNome || 'Homenageado(a)'}`;
+      return `Olá, HizabellAi Music! Meu pagamento foi aprovado.\n` +
+             `- Pacote: ${dados.pacoteNome || 'Canção'}\n` +
+             `- Ritmo/Gênero: ${dados.genero || 'Acústico'}\n` +
+             `- Clima: ${dados.clima || 'Emocionante'}\n` +
+             `- Nomes: ${nomes}\n\n` +
+             `Vou gravar meu áudio contando a história completa por aqui (e mandar as fotos do clipe se for o caso)!`;
+    }
+
+    function submitOrder() {
+      const clientName = document.getElementById('inputClientName').value.trim();
+      const recipientName = document.getElementById('inputRecipientName').value.trim();
+      const clientWhatsapp = document.getElementById('inputClientWhatsapp').value.trim();
+      const story = document.getElementById('inputStory').value.trim();
+
+      if (!clientName || !recipientName) {
+        alert("Por favor, preencha os nomes do cliente e do homenageado!");
+        return;
+      }
+
+      // Monta objeto completo do pedido
+      const pedido = {
+        pacoteId: app.selectedPack.id,
+        pacoteNome: app.selectedPack.name,
+        pacotePreco: app.selectedPack.price,
+        clienteNome: clientName,
+        homenageadoNome: recipientName,
+        whatsapp: clientWhatsapp,
+        genero: app.selectedGenre,
+        clima: app.selectedMood,
+        historia: story,
+        criadoEm: new Date().toISOString()
+      };
+
+      // 1. Salva no localStorage sob a chave solicitada
+      localStorage.setItem('pedido_hizabellai', JSON.stringify(pedido));
+
+      // 2. Obtém o link de checkout do mapa
+      const checkoutUrl = CHECKOUT_LINKS[app.selectedPack.id];
+
+      // Se o link configurado for um link real (inicia com http), redireciona diretamente
+      if (checkoutUrl && checkoutUrl.startsWith("http")) {
+        window.location.href = checkoutUrl;
+        return;
+      }
+
+      // Caso ainda seja o placeholder (para testes locais), exibe o modal
+      modalPackName.textContent = pedido.pacoteNome;
+      modalPackPrice.textContent = `R$ ${pedido.pacotePreco.replace('.', ',')}`;
+      modalRecipient.textContent = pedido.homenageadoNome;
+
+      const mpBtnText = btnMercadoPagoLink.querySelector('span');
+      if (mpBtnText) mpBtnText.textContent = `Pagar no Gateway (${checkoutUrl || 'Configurar Link'})`;
+      btnMercadoPagoLink.href = checkoutUrl || "#";
+
+      const waMsg = buildWhatsAppMessage(pedido);
+      btnWhatsappOrder.href = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(waMsg)}`;
+
+      paymentModal.classList.remove('hidden');
+    }
+
+    function closePaymentModal() {
+      paymentModal.classList.add('hidden');
+    }
+
+    function copyPixKey() {
+      navigator.clipboard.writeText(PIX_KEY_OFICIAL).then(() => {
+        const btn = document.getElementById('btnCopyPix');
+        btn.textContent = "Chave Copiada! ✓";
+        btn.classList.replace('bg-rose-600', 'bg-emerald-600');
+        setTimeout(() => {
+          btn.textContent = "Copiar Chave PIX";
+          btn.classList.replace('bg-emerald-600', 'bg-rose-600');
+        }, 3000);
+      });
+    }
+
+    paymentModal.addEventListener('click', (e) => {
+      if (e.target === paymentModal) closePaymentModal();
+    });
+
+    /* ══════════════════════════════════════════════════════════════════
+       7. FLUXO PÓS-PAGAMENTO (RETORNO ?status=pago OU ?pago=true)
+       ══════════════════════════════════════════════════════════════════ */
+    function checkPostPaymentFlow() {
+      const params = new URLSearchParams(window.location.search);
+      const isPostPayment = params.get('status') === 'pago' || 
+                           params.get('status') === 'approved' || 
+                           params.has('pago') || 
+                           window.location.hash === '#sucesso';
+
+      if (!isPostPayment) return;
+
+      const raw = localStorage.getItem('pedido_hizabellai');
+      const pedido = raw ? JSON.parse(raw) : {
+        pacoteNome: "Canção + Clipe com Fotos (30s)",
+        pacotePreco: "47.00",
+        clienteNome: "Cliente",
+        homenageadoNome: "Homenageado(a)",
+        genero: "Acústico",
+        clima: "Emocionante"
+      };
+
+      // Abre o modal em modo de aprovação pós-pagamento
+      modalPackName.textContent = pedido.pacoteNome;
+      modalPackPrice.textContent = `R$ ${(pedido.pacotePreco || "47.00").replace('.', ',')}`;
+      modalRecipient.textContent = pedido.homenageadoNome;
+
+      // Mensagem oficial pré-montada exatamente como solicitada
+      const waMsg = buildWhatsAppMessage(pedido);
+      btnWhatsappOrder.href = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(waMsg)}`;
+      btnWhatsappOrder.className = "w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/60 transition-all";
+      
+      const waBtnSpan = btnWhatsappOrder.querySelector('span');
+      if (waBtnSpan) waBtnSpan.textContent = "Enviar Meu Áudio e Detalhes no WhatsApp";
+
+      // Ajusta cabeçalho do modal para sucesso pós-pagamento
+      const modalHeaderTitle = paymentModal.querySelector('h3');
+      const modalHeaderSub = paymentModal.querySelector('p');
+      if (modalHeaderTitle) modalHeaderTitle.textContent = "Pagamento Aprovado com Sucesso! 🎉";
+      if (modalHeaderSub) modalHeaderSub.textContent = "Toque abaixo para enviar o áudio e fotos no WhatsApp:";
+
+      // Oculta o botão do link de pagamento já que acabou de pagar
+      btnMercadoPagoLink.classList.add('hidden');
+
+      paymentModal.classList.remove('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkPostPaymentFlow();
+    });
+  </script>
+
+</body>
+</html>
