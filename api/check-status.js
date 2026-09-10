@@ -2,6 +2,7 @@
 // Com Rate Limiting por IP (máx 60 req/min)
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 // Mapa em memória para rate limiting (reseta ao reiniciar a função)
 const rateLimitMap = new Map();
@@ -68,14 +69,20 @@ export default async function handler(req, res) {
   }
 
   try {
-    const filePath = path.join(process.cwd(), 'data', 'orders.json');
-    if (fs.existsSync(filePath)) {
-      const data = JSON.parse(fs.readFileSync(filePath, 'utf8') || '{}');
-      if (data[orderId]) {
-        // Retorna apenas campos necessários (não expõe dados sensíveis)
-        const { status, paidAt } = data[orderId];
-        return res.status(200).json({ orderId, status, paidAt });
-      }
+    const tmpPath = path.join(os.tmpdir(), 'hizabellai_orders.json');
+    const localPath = path.join(process.cwd(), 'data', 'orders.json');
+    let data = {};
+
+    if (fs.existsSync(tmpPath)) {
+      try { data = JSON.parse(fs.readFileSync(tmpPath, 'utf8') || '{}'); } catch (e) {}
+    } else if (fs.existsSync(localPath)) {
+      try { data = JSON.parse(fs.readFileSync(localPath, 'utf8') || '{}'); } catch (e) {}
+    }
+
+    if (data[orderId]) {
+      // Retorna apenas campos necessários (não expõe dados sensíveis)
+      const { status, paidAt } = data[orderId];
+      return res.status(200).json({ orderId, status, paidAt });
     }
     return res.status(200).json({ orderId, status: 'PENDING' });
   } catch (e) {

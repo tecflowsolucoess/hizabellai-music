@@ -2,9 +2,45 @@
 // Segurança: token obrigatório + idempotência + sem dados sensíveis expostos
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 // Registro de eventos já processados (idempotência em memória)
 const processedEvents = new Set();
+
+function getOrdersPath() {
+  return path.join(os.tmpdir(), 'hizabellai_orders.json');
+}
+
+function readOrders() {
+  const p = getOrdersPath();
+  try {
+    if (fs.existsSync(p)) {
+      return JSON.parse(fs.readFileSync(p, 'utf8') || '{}');
+    }
+  } catch (e) {}
+
+  try {
+    const local = path.join(process.cwd(), 'data', 'orders.json');
+    if (fs.existsSync(local)) {
+      return JSON.parse(fs.readFileSync(local, 'utf8') || '{}');
+    }
+  } catch (e) {}
+
+  return {};
+}
+
+function writeOrders(orders) {
+  const data = JSON.stringify(orders, null, 2);
+  try {
+    fs.writeFileSync(getOrdersPath(), data, 'utf8');
+  } catch (e) {}
+
+  try {
+    const localDir = path.join(process.cwd(), 'data');
+    if (!fs.existsSync(localDir)) fs.mkdirSync(localDir, { recursive: true });
+    fs.writeFileSync(path.join(localDir, 'orders.json'), data, 'utf8');
+  } catch (e) {}
+}
 
 export default async function handler(req, res) {
   // Security headers
@@ -36,7 +72,11 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Token de autenticação inválido' });
   }
 
-  const payload = req.body || {};
+  let payload = req.body || {};
+  if (typeof payload === 'string') {
+    try { payload = JSON.parse(payload); } catch (e) { payload = {}; }
+  }
+
   const event = payload.event;
   const validEvents = ['PAYMENT_RECEIVED', 'PAYMENT_CONFIRMED'];
 
@@ -64,15 +104,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const dataDir = path.join(process.cwd(), 'data');
-    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-
-    const filePath = path.join(dataDir, 'orders.json');
-    let orders = {};
-    if (fs.existsSync(filePath)) {
-      orders = JSON.parse(fs.readFileSync(filePath, 'utf8') || '{}');
-    }
-
+    const orders = readOrders();
     const extRef = payment.externalReference;
     const paymentVal = parseFloat(payment.value || 0);
 
@@ -109,7 +141,7 @@ export default async function handler(req, res) {
         value: paymentVal,
         event
       };
-      fs.writeFileSync(filePath, JSON.stringify(orders, null, 2), 'utf8');
+      writeOrders(orders);
       console.log(`[WEBHOOK] ✅ Pedido ${targetOrderId} marcado como PAID`);
     }
 
